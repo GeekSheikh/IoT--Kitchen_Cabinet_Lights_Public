@@ -2,6 +2,7 @@
 
 ##Demo - [Finished Product Before Mounting](https://www.youtube.com/watch?v=lRLasuZxU7c)
 
+![Final Product](https://github.com/srfnmnk/IoT--Kitchen_Cabinet_Lights_Public/blob/master/images/WireUp.jpg)
 
 ###Quick Description
 
