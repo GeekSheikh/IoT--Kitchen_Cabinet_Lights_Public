@@ -12,9 +12,9 @@ This is the gist of the [cabLightsLambda.js](https://github.com/srfnmnk/IoT--Kit
 code. Then you need to log into your Alexa app and authorize Alexa via OAuth v2 login screen to the particle account; a good [HowTo YouTube Video for joining Alexa to Particle](https://youtu.be/0rEBe_ZNBTk)
 was created by a buddy from [Particle Community](https://community.particle.io). More details for creating Alexa's Lambda functions are linked below.
 
-[Create Smart Home Skill for Alexa](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/steps-to-create-a-smart-home-skill).
-[Lambda Function for Alexa Skill Docs](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/steps-to-create-a-smart-home-skill).
-[SDK for Particle Photon Docs](https://docs.particle.io/guide/getting-started/intro/photon/).
+* [Create Smart Home Skill for Alexa](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/steps-to-create-a-smart-home-skill).
+* [Lambda Function for Alexa Skill Docs](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/steps-to-create-a-smart-home-skill).
+* [SDK for Particle Photon Docs](https://docs.particle.io/guide/getting-started/intro/photon/).
 
 Now, create a new product in the particle console and create a client auth key and use that in the code as that "Bearer" Auth token.
 
