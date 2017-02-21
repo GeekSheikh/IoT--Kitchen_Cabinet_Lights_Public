@@ -23,4 +23,6 @@ change the light output via PWM based with some more function to control gitter 
 My example code for this is the [cabLightingFinal.ino](https://github.com/srfnmnk/IoT--Kitchen_Cabinet_Lights_Public/blob/master/CabLightingFinal.ino) but as
 I said this can be much simpler.
 
+Here's the wiring - ![WiringImg](https://github.com/srfnmnk/IoT--Kitchen_Cabinet_Lights_Public/blob/master/images/WireUp.jpg)
+
 I hope to find some time to put together a more detailed readme on the Alexa setup and create a simple setup file but for now this will have to do.
