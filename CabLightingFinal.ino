@@ -1,6 +1,8 @@
 #define MAX_ARGS 64
+#define MAX_PWM 238.0
 #define ONE_DAY_MILLIS (24 * 60 * 60 * 1000)
 #define CHANGE_FREQ_MILLIS (60 * 1000)
+#define ALEXA_HOLD_MILLIS (60 * 30 * 1000)
 #define AMBIENT_HIGH 50
 #define AMBIENT_LOW 5
 #include <math.h>
@@ -45,25 +47,25 @@ void doStartupCycle(){
   delay(20);
   modifyLEDState(150);
   delay(20);
-  modifyLEDState(200);
+  modifyLEDState(180);
   delay(20);
-  modifyLEDState(240);
+  modifyLEDState(MAX_PWM);
   delay(20);
   for (int j=0;j<5;j++){
     Serial.println("j: " + String(j));
-    for (int i=240;i>=10;i=i-5) {
+    for (int i=MAX_PWM;i>=10;i=i-5) {
       Serial.println("i: " + String(i));
       modifyLEDState(i);
       delay(5);
     }
-    for (int i=10;i<= 250;i=i+5){
+    for (int i=10;i<=MAX_PWM;i=i+5){
       Serial.println("i: " + String(i));
       modifyLEDState(i);
       delay(5);
     }
   }
   for (int i=0;i<5;i++){
-    modifyLEDState(240);
+    modifyLEDState(MAX_PWM);
     delay(200);
     modifyLEDState(0);
     delay(200);
@@ -84,7 +86,7 @@ int onoffLight(String args){
     Serial.println("Alexa Called Me");
     int inVal = args.toInt();
     if (inVal == 1 ){
-      modifyLEDState(240);
+      modifyLEDState(MAX_PWM);
     } else if (inVal == 0){
       modifyLEDState(0);
     }
@@ -100,14 +102,14 @@ int onoffLight(String args){
     Serial.println();
 
     //override auto mode
-    disableAutoMode();
+    enableAutoMode();
 
     return ledState;
 }
 
 int setPercentage(String args){
     int inVal = args.toInt();
-    int newVal = (int)((float)inVal * 240.0) / 100.0;
+    int newVal = (int)((float)inVal * MAX_PWM) / 100.0;
     modifyLEDState(newVal);
 
     Serial.println();
@@ -126,12 +128,12 @@ int setPercentage(String args){
 
 int deltachange(String args){
     int inVal = args.toInt();
-    int newVal = ledState + (int)((float)inVal * 240.0) / 100.0;
+    int newVal = ledState + (int)((float)inVal * MAX_PWM) / 100.0;
 
     if (ledState + newVal < 0){
       modifyLEDState(0);
-    } else if (ledState + newVal > 240){
-      modifyLEDState(240);
+    } else if (ledState + newVal > MAX_PWM){
+      modifyLEDState(MAX_PWM);
     } else {
       modifyLEDState(newVal);
     }
@@ -177,12 +179,12 @@ void sendNewLEDState(int inVal){
   if (inVal <= 50) modifyLEDState(50);
   else if (inVal <= 125) modifyLEDState(100);
   else if (inVal <= 160) modifyLEDState(150);
-  else if (inVal <= 230) modifyLEDState(200);
-  else if (inVal > 280) modifyLEDState(240);
+  else if (inVal <= MAX_PWM) modifyLEDState(180);
+  else if (inVal > 280) modifyLEDState(MAX_PWM);
 }
 
 void modifyLEDState(int newLEDState){
-  ledState = constrain(ledState, 50, 240);
+  ledState = constrain(ledState, 50, MAX_PWM);
   Serial.println("LED State: " + String(ledState));
   Serial.println("New LED State: " + String(newLEDState));
   if (ledState != newLEDState){
@@ -191,14 +193,14 @@ void modifyLEDState(int newLEDState){
       analogWrite(ledPin, newLEDState);
     } else if (ledState < newLEDState) {
       for (int a=ledState;a<newLEDState;a=a+1){
-        a = constrain(a, 0, 240);
+        a = constrain(a, 0, MAX_PWM);
         Serial.println("a: " + String(a));
         analogWrite(ledPin, a);
         delay(20);
       }
     } else if (ledState > newLEDState){
         for (int b=ledState;b>newLEDState;b=b-1){
-          b = constrain(b, 0, 240);
+          b = constrain(b, 0, MAX_PWM);
           Serial.println("b: " + String(b));
           analogWrite(ledPin, b);
           delay(20);
@@ -221,7 +223,6 @@ void registerVal(int newVal){
   else rolling5Index++;
 }
 
-//Used to send measurements to TSDB on HBASE via HTTP Rest call
 /*void sendToTSDB(String _metric, String _value, String _measure) {
   String jsonString = "{";
   jsonString += "\"metric\":\"" + _metric + "\",";
@@ -283,11 +284,13 @@ void loop() {
     Serial.println("LED State: " + String(ledState));
     /*Particle.publish("LED State", String(ledState));*/
   } else {
-    if (millis() - autoModeDisabled > CHANGE_FREQ_MILLIS){
+    if (millis() - autoModeDisabled > ALEXA_HOLD_MILLIS){
       enableAutoMode();
     }
   }
   delay(1000);
+
+
 
   /*Serial.print("Application>\tResponse status: ");*/
   /*Serial.println(response.status);*/
