@@ -1,5 +1,5 @@
 #define MAX_ARGS 64
-#define MAX_PWM 238.0
+#define MAX_PWM 225.0
 #define ONE_DAY_MILLIS (24 * 60 * 60 * 1000)
 #define CHANGE_FREQ_MILLIS (60 * 1000)
 #define ALEXA_HOLD_MILLIS (60 * 30 * 1000)
@@ -41,13 +41,13 @@ unsigned long ledLastUpdated;
 /*http_response_t response;*/
 
 void doStartupCycle(){
-  modifyLEDState(50);
+  modifyLEDState(MAX_PWM * 0.20);
   delay(20);
-  modifyLEDState(100);
+  modifyLEDState(MAX_PWM * 0.40);
   delay(20);
-  modifyLEDState(150);
+  modifyLEDState(MAX_PWM * 0.60);
   delay(20);
-  modifyLEDState(180);
+  modifyLEDState(MAX_PWM * 0.80);
   delay(20);
   modifyLEDState(MAX_PWM);
   delay(20);
@@ -176,15 +176,15 @@ bool tryModifyState(){
 
 void sendNewLEDState(int inVal){
   Serial.println("Calculating New LED State");
-  if (inVal <= 50) modifyLEDState(50);
-  else if (inVal <= 125) modifyLEDState(100);
-  else if (inVal <= 160) modifyLEDState(150);
-  else if (inVal <= MAX_PWM) modifyLEDState(180);
+  if (inVal <= 50) modifyLEDState(MAX_PWM * 0.20);
+  else if (inVal <= 125) modifyLEDState(MAX_PWM * 0.40);
+  else if (inVal <= 160) modifyLEDState(MAX_PWM * 0.60);
+  else if (inVal <= 235) modifyLEDState(MAX_PWM * 0.80);
   else if (inVal > 280) modifyLEDState(MAX_PWM);
 }
 
 void modifyLEDState(int newLEDState){
-  ledState = constrain(ledState, 50, MAX_PWM);
+  ledState = constrain(ledState, MAX_PWM * 0.20, MAX_PWM);
   Serial.println("LED State: " + String(ledState));
   Serial.println("New LED State: " + String(newLEDState));
   if (ledState != newLEDState){
